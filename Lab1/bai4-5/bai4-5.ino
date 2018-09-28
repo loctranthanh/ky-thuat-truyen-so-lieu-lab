@@ -3,7 +3,8 @@
 #define TIME_LED_OFF 50
 
 enum state_t {
-  LED_ON = 0,
+  INIT = 0,
+  LED_ON,
   LED_OFF,
 };
 
@@ -12,23 +13,34 @@ unsigned long count = 0;
 
 void setup() {
   pinMode(LED, OUTPUT);  
+  state = INIT;
+}
+
+void led_on() {
+  digitalWrite(LED, LOW);
+}
+
+void led_off() {
   digitalWrite(LED, HIGH);
-  state = LED_OFF;
 }
 
 void loop() {
   switch (state) {
+    case INIT:
+      led_off();
+      state = LED_OFF;
+      break;
     case LED_OFF:
       if (count >= TIME_LED_OFF) {
         state = LED_ON;
-        digitalWrite(LED, LOW);
+        led_on();
         count = 0;
       }
       break;
     case LED_ON:
       if (count >= TIME_LED_ON) {
         state = LED_OFF;
-        digitalWrite(LED, HIGH);
+        led_off();
         count = 0;
       }
       break;
